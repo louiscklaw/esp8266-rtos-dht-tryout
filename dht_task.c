@@ -13,7 +13,7 @@
 #include <semphr.h>
 
 
-uint8_t const dht_gpio = 5;
+uint8_t const dht_gpio = 14;
 const dht_sensor_type_t sensor_type = DHT_TYPE_DHT22;
 
 extern QueueHandle_t publish_queue;
