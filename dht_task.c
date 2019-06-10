@@ -38,14 +38,13 @@ void dhtMeasurementTask(void *pvParameters)
             converted_temperature = temperature / 10;
             converted_humidity = humidity / 10;
 
-            printf("Humidity: %d%% Temp: %dC\n",
+            printf("%s:Humidity: %d%% Temp: %dC\n", __func__,
                     humidity / 10,
                     temperature / 10);
         } else {
             printf("Could not read data from sensor\n");
         }
 
-        printf("beat\r\n");
         snprintf(msg, PUB_MSG_LEN, "t:%d,h:%d\r\n", converted_temperature, converted_humidity);
         if (xQueueSend(publish_queue, (void *)msg, 0) == pdFALSE) {
             printf("Publish queue overflow.\r\n");

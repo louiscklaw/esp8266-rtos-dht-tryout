@@ -26,6 +26,8 @@
 
 extern SemaphoreHandle_t wifi_alive;
 
+extern uint8_t wifi_status;
+
 static void  wifi_task(void *pvParameters)
 {
     uint8_t status  = 0;
@@ -65,6 +67,7 @@ static void  wifi_task(void *pvParameters)
 
         while ((status = sdk_wifi_station_get_connect_status()) == STATION_GOT_IP) {
             xSemaphoreGive( wifi_alive );
+            wifi_status = 1;
             taskYIELD();
         }
         printf("WiFi: disconnected\n\r");

@@ -25,12 +25,14 @@
 #include "dht_task.c"
 #include "wifi_task.c"
 #include "mqtt.c"
-#include "sntp_task.c"
+// #include "sntp_task.c"
 
 #include <semphr.h>
 
 SemaphoreHandle_t wifi_alive;
 QueueHandle_t publish_queue;
+
+uint8_t wifi_status = 0;
 
 void user_init(void)
 {
@@ -41,11 +43,12 @@ void user_init(void)
     printf("init tasks\n");
     xTaskCreate(blink_task, "blink_task", 256, NULL, 2, NULL);
 
-    // xTaskCreate(&wifi_task, "wifi_task",  256, NULL, 2, NULL);
+    xTaskCreate(&wifi_task, "wifi_task",  256, NULL, 2, NULL);
 
     xTaskCreate(dhtMeasurementTask, "dhtMeasurementTask", 256, NULL, 2, NULL);
 
+    // xTaskCreate(&sntp_tsk, "sntp_task", 1024, NULL, 5, NULL);
+
     xTaskCreate(&mqtt_task, "mqtt_task", 1024, NULL, 4, NULL);
 
-    xTaskCreate(&sntp_tsk, "sntp_task", 1024, NULL, 1, NULL);
 }

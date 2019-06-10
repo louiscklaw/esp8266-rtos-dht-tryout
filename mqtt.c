@@ -119,12 +119,14 @@ static void  mqtt_task(void *pvParameters)
         mqtt_subscribe(&client, "/esptopic", MQTT_QOS1, topic_received);
         xQueueReset(publish_queue);
 
+        xSemaphoreGive( wifi_alive );
+
         while(1){
+            xSemaphoreTake(wifi_alive, portMAX_DELAY);
 
             char msg[PUB_MSG_LEN - 1] = "\0";
-            while(xQueueReceive(publish_queue, (void *)msg, 0) ==
-                  pdTRUE){
-                printf("got message to publish\r\n");
+            while(xQueueReceive(publish_queue, (void *)msg, 0) == pdTRUE){
+                printf("%s:got message to publish\r\n", __func__ );
                 mqtt_message_t message;
                 message.payload = msg;
                 message.payloadlen = PUB_MSG_LEN;
@@ -141,6 +143,8 @@ static void  mqtt_task(void *pvParameters)
             ret = mqtt_yield(&client, 1000);
             if (ret == MQTT_DISCONNECTED)
                 break;
+
+            xSemaphoreGive(wifi_alive);
         }
         printf("Connection dropped, request restart\n\r");
         mqtt_network_disconnect(&network);

@@ -29,15 +29,14 @@
 #define vTaskDelayMs(ms)	vTaskDelay((ms)/portTICK_PERIOD_MS)
 #define UNUSED_ARG(x)	(void)x
 
+extern SemaphoreHandle_t wifi_alive;
+
+extern uint8_t wifi_status;
+
 void sntp_tsk(void *pvParameters)
 {
 	const char *servers[] = {SNTP_SERVERS};
 	UNUSED_ARG(pvParameters);
-
-	/* Wait until we have joined AP and are assigned an IP */
-	while (sdk_wifi_station_get_connect_status() != STATION_GOT_IP) {
-		vTaskDelayMs(100);
-	}
 
 	/* Start SNTP */
 	printf("Starting SNTP... \r\n");
@@ -57,4 +56,6 @@ void sntp_tsk(void *pvParameters)
 		time_t ts = time(NULL);
 		printf("TIME: %s", ctime(&ts));
 	}
+
+
 }
