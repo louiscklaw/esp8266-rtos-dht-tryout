@@ -117,7 +117,57 @@ void demo_strip(void *pvParameters)
 
 void demo_rgb_dimm(void *pvParameters)
 {
+    const uint8_t anim_step = 10;
+    const uint8_t anim_max =250;
 
+    // Number of your "pixels"
+    const uint8_t pixel_count = 8;
+
+    // duration between color changes
+    const uint8_t delay = 25;
+
+    ws2812_rgb_t color = WS2812_RGB(anim_max, 0, 0);
+    uint8_t step = 0;
+
+    ws2812_rgb_t color2 = WS2812_RGB(anim_max, 0, 0);
+    uint8_t step2 = 0;
+
+    while (1) {
+
+        color = color2;
+        step = step2;
+
+        // Start a data sequence (disables interrupts)
+        ws2812_seq_start();
+
+        color.g = 1;
+        color.r = 1;
+        color.b = 1;
+        ws2812_seq_rgb(pin, color.num);
+
+        color.g = 0;
+        color.r = 0;
+        color.b = 0;
+        ws2812_seq_rgb(pin, color.num);
+
+        color.g = 1;
+        color.r = 1;
+        color.b = 1;
+        ws2812_seq_rgb(pin, color.num);
+
+        for (uint8_t i = 3; i < pixel_count; i++) {
+            color.g = 0;
+            color.r = 0;
+            color.b = 0;
+            ws2812_seq_rgb(pin, color.num);
+        }
+
+        // End the data sequence, display colors (interrupts are restored)
+        ws2812_seq_end();
+
+        // wait a bit
+        delay_ms(delay);
+    }
 }
 
 
@@ -132,7 +182,7 @@ void init_ws2812(void)
     // Select a demo function:
 
 #if true
-# define demo demo_strip
+# define demo demo_rgb_dimm
 #else
 # define demo demo_single
 #endif
