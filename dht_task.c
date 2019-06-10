@@ -54,3 +54,8 @@ void dhtMeasurementTask(void *pvParameters)
         vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
 }
+
+void init_dht(void)
+{
+    xTaskCreate(dhtMeasurementTask, "dhtMeasurementTask", 256, NULL, 2, NULL);
+}

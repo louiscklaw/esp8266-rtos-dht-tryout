@@ -75,3 +75,8 @@ static void  wifi_task(void *pvParameters)
         vTaskDelay( 1000 / portTICK_PERIOD_MS );
     }
 }
+
+void init_wifi(void)
+{
+    xTaskCreate(&wifi_task, "wifi_task",  256, NULL, 2, NULL);
+}

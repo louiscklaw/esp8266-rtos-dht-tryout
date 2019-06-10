@@ -18,3 +18,8 @@ void blink_task(void *pvParameters)
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
 }
+
+void init_led(void)
+{
+    xTaskCreate(blink_task, "blink_task", 256, NULL, 2, NULL);
+}

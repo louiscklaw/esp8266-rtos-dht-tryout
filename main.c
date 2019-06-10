@@ -28,6 +28,9 @@
 // #include "sntp_task.c"
 #include "ssd1306.c"
 
+#include "ws2812.c"
+
+
 #include <semphr.h>
 
 SemaphoreHandle_t wifi_alive;
@@ -46,17 +49,19 @@ void user_setup(void)
 
 void init_task(){
 
-    xTaskCreate(blink_task, "blink_task", 256, NULL, 2, NULL);
+    init_led();
 
-    xTaskCreate(&wifi_task, "wifi_task",  256, NULL, 2, NULL);
+    init_wifi();
 
-    xTaskCreate(dhtMeasurementTask, "dhtMeasurementTask", 256, NULL, 2, NULL);
+    init_dht();
 
     // xTaskCreate(&sntp_tsk, "sntp_task", 1024, NULL, 5, NULL);
 
-    xTaskCreate(&mqtt_task, "mqtt_task", 1024, NULL, 4, NULL);
+    init_mqtt();
 
     init_ssd1306();
+
+    init_ws2812();
 }
 
 void user_init(void)

@@ -1,6 +1,5 @@
 
 #define PUB_MSG_LEN 16
-
 #define MQTT_HOST ("192.168.1.10")
 #define MQTT_PORT 1883
 
@@ -153,7 +152,6 @@ static void  mqtt_task(void *pvParameters)
     }
 }
 
-void init_mqtt(void)
-{
+void init_mqtt(void){
     xTaskCreate(&mqtt_task, "mqtt_task", 1024, NULL, 4, NULL);
 }
