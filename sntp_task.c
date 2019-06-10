@@ -40,9 +40,9 @@ void sntp_tsk(void *pvParameters)
 	}
 
 	/* Start SNTP */
-	printf("Starting SNTP... ");
+	printf("Starting SNTP... \r\n");
 	/* SNTP will request an update each 5 minutes */
-	sntp_set_update_delay(5*60000);
+	sntp_set_update_delay(30*60000);
 	/* Set GMT+1 zone, daylight savings off */
 	const struct timezone tz = {8*60, 0};
 	/* SNTP initialization */
@@ -53,7 +53,7 @@ void sntp_tsk(void *pvParameters)
 
 	/* Print date and time each 5 seconds */
 	while(1) {
-		vTaskDelayMs(5000);
+		vTaskDelayMs(1000);
 		time_t ts = time(NULL);
 		printf("TIME: %s", ctime(&ts));
 	}
