@@ -91,12 +91,9 @@ void scrolling_timer(TimerHandle_t h)
     scrol=!scrol ;
 }
 
-void user_init(void)
+void init_ssd1306(void)
 {
-    // Setup HW
-    uart_set_baud(0, 115200);
-
-    printf("SDK version:%s\n", sdk_system_get_sdk_version());
+    printf("init ssd1306");
 
 #ifdef I2C_CONNECTION
     i2c_init(I2C_BUS, SCL_PIN, SDA_PIN, I2C_FREQ_400K);

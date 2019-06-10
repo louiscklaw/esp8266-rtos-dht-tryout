@@ -26,6 +26,7 @@
 #include "wifi_task.c"
 #include "mqtt.c"
 // #include "sntp_task.c"
+#include "ssd1306.c"
 
 #include <semphr.h>
 
@@ -34,13 +35,17 @@ QueueHandle_t publish_queue;
 
 uint8_t wifi_status = 0;
 
-void user_init(void)
+void user_setup(void)
 {
+    printf("user setup");
+
     uart_set_baud(0, 115200);
     vSemaphoreCreateBinary(wifi_alive);
     publish_queue = xQueueCreate(3, PUB_MSG_LEN);
+}
 
-    printf("init tasks\n");
+void init_task(){
+
     xTaskCreate(blink_task, "blink_task", 256, NULL, 2, NULL);
 
     xTaskCreate(&wifi_task, "wifi_task",  256, NULL, 2, NULL);
@@ -51,4 +56,13 @@ void user_init(void)
 
     xTaskCreate(&mqtt_task, "mqtt_task", 1024, NULL, 4, NULL);
 
+    init_ssd1306();
+}
+
+void user_init(void)
+{
+    user_setup();
+
+    printf("init tasks\n");
+    init_task();
 }
